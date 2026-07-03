@@ -14,3 +14,8 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = ["pytest>=8", "numpy", "astropy"]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: requires a live DS9 instance (auto-skips otherwise)",
+]
