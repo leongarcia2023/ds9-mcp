@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Fast, hermetic tests. No DS9 required — everything DS9-facing is mocked.
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Unit tests
+        run: uv run pytest -m "not integration" -q
+
+  # Integration tests against a real DS9, headless under Xvfb. The ds9_session
+  # fixture starts Xvfb itself when DISPLAY is unset (Linux), so we only need
+  # the binaries present: saods9 (ds9), xpa-tools (xpaget/xpaset), and xvfb.
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install DS9, XPA tools, and Xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends saods9 xpa-tools xvfb
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Integration tests (headless DS9 under Xvfb)
+        env:
+          XPA_METHOD: local
+        run: uv run pytest -m integration -q
