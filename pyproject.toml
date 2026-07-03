@@ -1,0 +1,16 @@
+[project]
+name = "ds9-mcp"
+version = "0.1.0"
+description = "MCP server for SAOImageDS9: agentic FITS quick-look via XPA"
+requires-python = ">=3.10"
+dependencies = ["mcp[cli]>=1.2.0"]
+
+[project.scripts]
+ds9-mcp = "ds9_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8", "numpy", "astropy"]
