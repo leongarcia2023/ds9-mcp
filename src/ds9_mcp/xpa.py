@@ -201,6 +201,11 @@ def _run(argv: list[str], timeout: float) -> subprocess.CompletedProcess:
         raise XPANotFoundError(MSG_XPA_NOT_FOUND) from exc
     except subprocess.TimeoutExpired as exc:
         raise XPATimeoutError(_msg_timeout(timeout)) from exc
+    except OSError as exc:  # anything else from the OS (permissions, argv, ...)
+        raise DS9Error(
+            f"Could not run the XPA command ({exc.__class__.__name__}: {exc}). "
+            "Check that the XPA tools are executable and on PATH, then retry."
+        ) from exc
 
 
 def xpa_get(*args: str, target: str | None = None, timeout: float = DEFAULT_TIMEOUT) -> str:
