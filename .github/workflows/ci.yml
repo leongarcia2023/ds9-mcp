@@ -36,7 +36,12 @@ jobs:
       - name: Install DS9, XPA tools, and Xvfb
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends saods9 xpa-tools xvfb
+          # libtk-img provides the Tk Img extension (img::png, img::jpeg) that
+          # DS9's `saveimage` requires for raster output. The packaged saods9
+          # does not always pull it in, so `saveimage png` fails headlessly
+          # with "An error has occurred while creating" without it.
+          # (cf. Debian #1077631, the same root cause for jpeg output.)
+          sudo apt-get install -y --no-install-recommends saods9 xpa-tools xvfb libtk-img
 
       - name: Install uv
         run: |
