@@ -25,6 +25,12 @@ here instead of expanding the frozen 15-tool surface. Revisit once CI exists.
   a fixed DS9 makes it unnecessary.
 - **CI via Xvfb.** The `ds9_session` fixture already runs DS9 headless under
   Xvfb on Linux; wiring it into GitHub Actions is the natural next step and a
-  prerequisite for the PyPI publish above.
+  prerequisite for the PyPI publish above. **Done** in `.github/workflows/ci.yml`
+  (unit + integration jobs).
+- **`capture_view` in CI.** DS9's `saveimage` grabs the on-screen window, which
+  Xvfb-without-a-window-manager cannot provide, so the `capture_view`
+  integration test skips in CI (the other five integration tests run for real).
+  To actually exercise it headlessly, try starting a minimal WM (e.g. `openbox`
+  or `fluxbox`) on the Xvfb display before launching DS9, then drop the skip.
 - **macOS `.app` DS9 has no `ds9` on PATH.** Tests resolve the bundle path
   directly. A documented `ds9` shim/symlink could simplify user setup.
