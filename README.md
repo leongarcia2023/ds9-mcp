@@ -1,5 +1,7 @@
 # ds9-mcp
 
+[![CI](https://github.com/leongarcia2023/ds9-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/leongarcia2023/ds9-mcp/actions/workflows/ci.yml)
+
 An MCP server that gives agents **hands and eyes on SAOImageDS9**. It wraps
 DS9's XPA interface with plain `subprocess` calls to `xpaget`/`xpaset` — no
 compiled dependencies, no pyds9. The headline capability is the **vision loop**:
